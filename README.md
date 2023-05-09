@@ -11,5 +11,8 @@ spring.datasource.url=jdbc:h2:mem:testdb
 spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=123
+
+# mapping first_name => firstName
+mybatis.configuration.map-underscore-to-camel-case=true
 ```
 
