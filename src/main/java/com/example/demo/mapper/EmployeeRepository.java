@@ -25,20 +25,40 @@ public interface EmployeeRepository {
     @Update("update emp set dep_id=#{depId} WHERE id = #{empId}")
     public int updateDep(@Param("empId") Long empId, @Param("depId") Long depId);
 
-    @Insert("insert into emp (first_name, last_name, career) values(#{firstName}, #{lastName}, #{career})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("insert into emp (id, first_name, last_name, career) values(#{id}, #{firstName}, #{lastName}, #{career})")
+    @SelectKey(statement="VALUES NEXT VALUE FOR SEQ_ID", keyProperty="id", before=true, resultType=Long.class)
     public int create(Employee employee);
 
-    @SelectProvider(type = QueryBuilder.class, method = "hello")
+    @SelectProvider(type = QueryBuilder.class, method = "selectOnly3")
     public List<Employee> findSome();
 
+    /**
+     * generate "where" condition only when parameter is not null
+     */
     @Select("""
-            <script>select * from emp
-                <if test='depId != null or career != null'> WHERE </if>
-                <if test='depId != null'> dep_id=#{depId} </if>
-                <if test='depId != null and career != null'> AND </if>
-                <if test='career != null'> career=#{career} </if>
+            <script>select * from emp 
+                <where>
+                    <if test='depId != null'> dep_id=#{depId} </if>
+                    <if test='career != null'> AND career=#{career} </if>
+                </where>
             </script>
             """)
     public List<Employee> findWithCondition(Long depId, String career);
+
+    /**
+     * generate "where" condition only when parameter is not null
+     */
+    @SelectProvider(type = QueryBuilder.class)  // if method missing, then choose Same Method Name
+    public List<Employee> selectWithCondition(@Param("depId") Long depId, @Param("career") String career);
+
+    /**
+     * use bind parameter
+     */
+    @Select("""
+            <script>
+                <bind name="firstName" value="'%' + _parameter + '%'" />
+                SELECT * FROM emp 
+                    WHERE first_name like #{firstName}
+            </script>""")
+    public List<Employee> findByFirstNameLike(String firstName);
 }

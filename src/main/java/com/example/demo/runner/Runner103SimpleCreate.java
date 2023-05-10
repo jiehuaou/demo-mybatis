@@ -8,20 +8,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Slf4j
-@Order(101)
+@Order(103)
 @Component
-public class RunnerSimpleUpdate implements CommandLineRunner {
+public class Runner103SimpleCreate implements CommandLineRunner {
     @Autowired
     EmployeeRepository employeeRepository;
     @Override
     public void run(String... args) throws Exception {
-
+        Employee employee = Employee.builder().career("Software Dev").firstName("Joe").lastName("Trump").build();
         log.info("--------------");
-        log.info("updateDep(8, 2) => {}", employeeRepository.updateDep(8L, 2L));
+        log.info("create(employee) => {}", employeeRepository.create(employee));
         log.info("--------------");
-        log.info("findById(8) => {}", employeeRepository.findById(8L));
+        log.info("findByFirstName(Joe) => {}", employeeRepository.findByFirstName("Joe"));
     }
 }

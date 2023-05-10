@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Order(110)
 @Component
-public class RunnerDynamicQuery implements CommandLineRunner {
+public class Runner110DynamicQuery implements CommandLineRunner {
     @Autowired
     EmployeeRepository employeeRepository;
     @Override
@@ -22,11 +22,19 @@ public class RunnerDynamicQuery implements CommandLineRunner {
         List<Employee> employees = employeeRepository.findSome();
         employees.forEach(e->log.info("{}", e));
 
-        log.info("-------------- findWithCondition(null, writer) ------------");
+        log.info("-------------- findWithCondition(depId=null, writer) ------------");
         employeeRepository.findWithCondition(null, "writer").forEach(e->log.info("{}", e));
 
-        log.info("-------------- findWithCondition(1L, writer) ------------");
+        log.info("-------------- findWithCondition(depId=1L, writer) ------------");
         employeeRepository.findWithCondition(1L, "writer").forEach(e->log.info("{}", e));
 
+        log.info("-------------- findWithCondition2(depId=null, writer) ------------");
+        employeeRepository.selectWithCondition(null, "writer").forEach(e->log.info("{}", e));
+
+        log.info("-------------- findWithCondition2(depId=1L, writer) ------------");
+        employeeRepository.selectWithCondition(1L, "writer").forEach(e->log.info("{}", e));
+
+        log.info("-------------- findByFirstNameLike('first') ------------");
+        employeeRepository.findByFirstNameLike("first").forEach(e->log.info("{}", e));
     }
 }
