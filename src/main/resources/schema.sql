@@ -33,7 +33,13 @@ CREATE TABLE dep(
   leader  VARCHAR(50)
 );
 
-insert into dep (id, dep_name, leader) values(1, 'sport', 'John');
-insert into dep (id, dep_name, leader) values(2, 'Motor', 'Jeff');
+insert into dep (id, dep_name, leader) values
+    (1, 'sport', 'John'),
+    (2, 'motor', 'Jeff'),
+    (3, 'weather', 'Jeff'),
+    (4, 'report', 'Jean'),
+    (101, 'accounting', 'John'),
+    (102, 'transportation', 'Joe')  ;
+
 
 commit;

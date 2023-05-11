@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.DepartmentRepository">
+    <!-- result mapping  -->
     <resultMap type="com.example.demo.model.Department" id="DepartmentResult">
         <id property="id" column="id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="leader"/>
     </resultMap>
+
+    <!-- find all  -->
     <select id="findAll" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
         select * from dep
     </select>
+
+    <!-- find by Name Like '%xxx%' -->
+    <select id="findByNameLike" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
+        <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
+        select * from dep where dep_name like #{depName}
+    </select>
+
+    <!-- dynamic condition : find by Name Like '%xxx%' and leader EQ 'xxx' -->
+    <select id="findByNameLikeAndLeader" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
+        <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
+        select * from dep
+        <where>
+            <if test="depName!=null">dep_name like #{depName}</if>
+            <if test="leader!=null">and leader = #{leader}</if>
+        </where>
+    </select>
+
+    <!-- dynamic condition : find by Name in (x1, ...) -->
+    <select id="findByNameIn" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
+        select * from dep
+        <where>
+            <foreach collection="names" index="i" item="item" open="dep_name in (" separator="," close=")" nullable="true">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>

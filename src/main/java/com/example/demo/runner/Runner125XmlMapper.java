@@ -10,12 +10,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
 @Order(125)
 @Component
-public class Runner125Session implements CommandLineRunner {
+public class Runner125XmlMapper implements CommandLineRunner {
     @Autowired
     DepartmentRepository departmentRepository;
     @Autowired
@@ -24,5 +25,14 @@ public class Runner125Session implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("-------------- findAll() --------------");
         departmentRepository.findAll().forEach(e->log.info("{}", e.toString()));
+
+        log.info("-------------- findByNameLike(\"ort  \") --------------");
+        departmentRepository.findByNameLike("ORT  ").forEach(e->log.info("{}", e.toString()));
+
+        log.info("-------------- findByNameLikeAndLeader('ORT  ', 'John') --------------");
+        departmentRepository.findByNameLikeAndLeader("ORT  ", "John").forEach(e->log.info("{}", e.toString()));
+
+        log.info("-------------- findByNameIn(sport, motor) --------------");
+        departmentRepository.findByNameIn("sport", "motor").forEach(e->log.info("{}", e.toString()));
     }
 }
