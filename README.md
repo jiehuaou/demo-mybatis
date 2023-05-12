@@ -77,6 +77,15 @@ public interface EmployeeRepository {
     </select>
 ```
 
+java corresponding Method
+```java
+@Mapper
+public interface DepartmentRepository {
+    
+    List<Department> findByNameLikeAndLeader(@Param("depName") String nameLike, String leader);
+}
+```
+
 ### Dynamic SQL with Annotations
 Sql provider
 ```java
