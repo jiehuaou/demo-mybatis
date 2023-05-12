@@ -8,6 +8,10 @@
         <result property="leader" column="leader"/>
     </resultMap>
 
+    <select id="findById" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
+        select * from dep where id = #{id}
+    </select>
+
     <!-- find all  -->
     <select id="findAll" resultType="com.example.demo.model.Department" resultMap="DepartmentResult">
         select * from dep
@@ -38,5 +42,9 @@
             </foreach>
         </where>
     </select>
+
+    <insert id="create" >
+        insert into dep  (id, dep_name, leader) values (#{id}, #{departName}, #{leader})
+    </insert>
 
 </mapper>

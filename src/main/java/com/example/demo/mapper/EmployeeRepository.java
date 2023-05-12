@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Mapper with annotations
+ */
 @Mapper
 public interface EmployeeRepository {
     @Select("select * from emp")

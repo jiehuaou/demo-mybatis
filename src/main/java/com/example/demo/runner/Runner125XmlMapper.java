@@ -2,7 +2,9 @@ package com.example.demo.runner;
 
 import com.example.demo.mapper.DepartmentRepository;
 import com.example.demo.mapper.EmployeeRepository;
+import com.example.demo.model.Department;
 import com.example.demo.model.Employee;
+import com.example.demo.service.DepartmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,13 @@ public class Runner125XmlMapper implements CommandLineRunner {
     DepartmentRepository departmentRepository;
     @Autowired
     SqlSessionFactory sqlSessionFactory;
+
     @Override
     public void run(String... args) throws Exception {
+        log.info("-------------- create() --------------");
+        departmentRepository.create(Department.builder().id(200L).departName("hello").leader("world").build());
+        departmentRepository.findById(200L).ifPresent(e->log.info("{}", e.toString()));
+
         log.info("-------------- findAll() --------------");
         departmentRepository.findAll().forEach(e->log.info("{}", e.toString()));
 
