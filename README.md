@@ -139,3 +139,46 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 }
 ```
+
+### Programmatic Transaction
+
+use either transactionManager or TransactionTemplate
+```java
+@Component
+public class Runner129TransactionManually {
+
+    @Autowired
+    PlatformTransactionManager transactionManager;
+    @Autowired
+    DepartmentRepository departmentRepository;
+
+    // use transactionManager
+    void testSuccessTransactionManually() {
+        TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
+        try {
+            departmentRepository.create(Department.builder().id(1501L).departName("a005").build());
+            departmentRepository.create(Department.builder().id(1502L).departName("a005").build());
+            transactionManager.commit(txStatus);
+        } catch (Exception e) {
+            transactionManager.rollback(txStatus);
+            log.info("TransactionException ==> {}", e);
+        }
+    }
+
+    // use TransactionTemplate
+    void testSuccessTransactionTemplateManually() {
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.execute(status -> {
+            try {
+                departmentRepository.create(Department.builder().id(1801L).departName("a005").build());
+                departmentRepository.create(Department.builder().id(1802L).departName("a005").build());
+                //abort();
+            } catch (Exception e) {
+                status.setRollbackOnly();
+                log.info("TransactionException ==> {}", e.toString());
+            }
+            return null;
+        });
+    }
+}
+```
