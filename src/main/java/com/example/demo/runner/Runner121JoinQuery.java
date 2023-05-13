@@ -11,18 +11,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Slf4j
-@Order(101)
+@Order(121)
 @Component
-public class Runner101SimpleUpdate implements CommandLineRunner {
+public class Runner121JoinQuery implements CommandLineRunner {
     @Autowired
     EmployeeRepository employeeRepository;
     @Override
     public void run(String... args) throws Exception {
+        log.info("-------------- findAll() --------------");
+        List<Employee> employees = employeeRepository.findAllJoin();
+        employees.forEach(e->log.info("{}", e));
         log.info("--------------");
-        log.info("findById(8) => {}", employeeRepository.findById(8L));
-        log.info("--------------");
-        log.info("updateDep(8, 2) => {}", employeeRepository.updateDep(8L, 2L));
-        log.info("--------------");
-        log.info("findById(8) => {}", employeeRepository.findById(8L));
+
     }
 }

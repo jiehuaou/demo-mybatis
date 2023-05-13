@@ -3,29 +3,29 @@
 <mapper namespace="com.example.demo.mapper.DepartmentRepository">
 
     <!-- result mapping  -->
-    <resultMap type="DepartmentType" id="DepartmentResult">
+    <resultMap type="DepartmentType" id="DepartmentResultMap">
         <id property="id" column="id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="leader"/>
     </resultMap>
 
-    <select id="findById" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findById" resultType="DepartmentType" resultMap="DepartmentResultMap">
         select * from dep where id = #{id}
     </select>
 
     <!-- find all  -->
-    <select id="findAll" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findAll" resultType="DepartmentType" resultMap="DepartmentResultMap">
         select * from dep
     </select>
 
     <!-- find by Name Like '%xxx%' -->
-    <select id="findByNameLike" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findByNameLike" resultType="DepartmentType" resultMap="DepartmentResultMap">
         <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
         select * from dep where dep_name like #{depName}
     </select>
 
     <!-- dynamic condition : find by Name Like '%xxx%' and leader EQ 'xxx' -->
-    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentResultMap">
         <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
         select * from dep
         <where>
@@ -35,7 +35,7 @@
     </select>
 
     <!-- dynamic condition : find by Name in (x1, ...) -->
-    <select id="findByNameIn" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findByNameIn" resultType="DepartmentType" resultMap="DepartmentResultMap">
         select * from dep
         <where>
             <foreach collection="names" index="i" item="item" open="dep_name in (" separator="," close=")" nullable="true">

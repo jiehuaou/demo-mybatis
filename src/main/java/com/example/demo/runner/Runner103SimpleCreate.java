@@ -16,7 +16,7 @@ public class Runner103SimpleCreate implements CommandLineRunner {
     EmployeeRepository employeeRepository;
     @Override
     public void run(String... args) throws Exception {
-        Employee employee = Employee.builder().career("Software Dev").firstName("Joe").lastName("Trump").build();
+        Employee employee = Employee.builder().career("Software Dev").firstName("Joe").lastName("Chen").build();
         log.info("--------------");
         log.info("create(employee) => {}", employeeRepository.create(employee));
         log.info("--------------");

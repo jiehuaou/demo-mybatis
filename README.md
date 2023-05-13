@@ -1,19 +1,25 @@
 # demo-mybatis
 
 * use H2 database
+* use Mybatis
 
 ### App config with H2 database and MyBatis & Mapper
 ```shell
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2
 
+# DB config
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.datasource.driverClassName=org.h2.Driver
 spring.datasource.username=sa
 spring.datasource.password=123
 
+# mybatis config
 mybatis.mapper-locations=classpath:mapper/**/*-mapper.xml
 mybatis.config-location=classpath:/mybatis-config.xml
+
+# mapper loging
+logging.level.com.example.demo.mapper=TRACE
 ```
 
 ### mybatis-config.xml
@@ -32,13 +38,13 @@ mybatis.config-location=classpath:/mybatis-config.xml
 ```xml
 <mapper namespace="com.example.demo.mapper.DepartmentRepository">
     <!-- result mapping  -->
-    <resultMap type="DepartmentType" id="DepartmentResult">
+    <resultMap type="DepartmentType" id="DepartmentResultMap">
         <id property="id" column="id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="leader"/>
     </resultMap>
 
-    <select id="findById" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findById" resultType="DepartmentType" resultMap="DepartmentResultMap">
         select * from dep where id = #{id}
     </select>
 </mapper>
@@ -67,7 +73,7 @@ public interface EmployeeRepository {
 ### Dynamic SQL with XML
 ```xml
 <!-- dynamic condition : find by Name Like '%xxx%' and leader EQ 'xxx' -->
-    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentResult">
+    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentResultMap">
         <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
         select * from dep
         <where>
