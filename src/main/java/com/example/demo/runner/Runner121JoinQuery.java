@@ -19,8 +19,8 @@ public class Runner121JoinQuery implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("-------------- findAll() --------------");
-        List<Employee> employees = employeeRepository.findAllJoin();
-        employees.forEach(e->log.info("{}", e));
+        List<Employee> employees = employeeRepository.findAllWithJoin();
+        employees.forEach(e->log.info("{}", e.toLongString()));
         log.info("--------------");
 
     }

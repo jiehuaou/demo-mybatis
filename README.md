@@ -188,3 +188,68 @@ public class Runner129TransactionManually {
     }
 }
 ```
+
+### Join Query & ResultMap
+
+Join Query
+```sql
+select e.id, e.first_name, e.last_name, e.career, e.dep_id, 
+     d.dep_name, d.leader, 
+     t.id as task_id, t.job as task_job, t.emp_id as task_emp_id
+     from emp e 
+     left outer join dep d on e.dep_id=d.id 
+     left outer join task t on t.emp_id=e.id
+```
+
+Result Map
+```xml
+<mapper namespace="com.example.demo.mapper.EmployeeRepository">
+    <resultMap type="EmployeeType" id="JoinEmployeeResultMap" extends="EmployeeResultMap">
+        <!--   ref department Object     -->
+        <association property="department" resultMap="DepartmentResultMap"/>
+        <!--   ref collection of Task Object     -->
+        <collection property="tasks" resultMap="TaskResultMap" ofType="TaskType" />
+    </resultMap>
+    <resultMap id="EmployeeResultMap" type="EmployeeType">
+        <id     column="id" property="id"/>
+        <result column="first_name" property="firstName" />
+        <result column="last_name" property="lastName" />
+        <result column="career" property="career" />
+    </resultMap>
+    <resultMap id="DepartmentResultMap" type="DepartmentType">
+        <id     property="id" column="dep_id"/>
+        <result property="departName" column="dep_name"/>
+        <result property="leader" column="dep_leader"/>
+    </resultMap>
+    <resultMap id="TaskResultMap" type="TaskType">
+        <id property="id" column="task_id"/>
+        <result property="job" column="task_job"/>
+        <result property="empId" column="task_emp_id"/>
+    </resultMap>
+</mapper>
+```
+
+Entity Class
+```java
+public class Employee {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String career;
+    private Department department;
+    private List<Task> tasks = new ArrayList<>();
+}
+```
+
+Mapper Interface, via Annotations, reference the ResultMap **JoinEmployeeResultMap** defined in XML file. 
+```java
+@Mapper
+public interface EmployeeRepository {
+    @Select("select ... " +
+            " from emp e " +
+            " left outer join dep d on e.dep_id=d.id " +
+            " left outer join task t on t.emp_id=e.id")
+    @ResultMap("JoinEmployeeResultMap")
+    public List<Employee> findAllWithJoin();
+}
+```

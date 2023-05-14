@@ -24,8 +24,24 @@ public class Employee {
         this.id = id;
     }
 
+    public Employee(Long id, String firstName, String lastName, String career) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.career = career;
+    }
+
     @Override
     public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", career='" + career + '\'' +
+                '}';
+    }
+
+    public String toLongString() {
         return "Employee{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +

@@ -18,13 +18,13 @@ public interface EmployeeRepository {
     public List<Employee> findAll();
 
     @Select("select e.*, " +
-            " d.dep_name, d.leader, " +
+            " d.dep_name, d.leader as dep_leader, " +
             " t.id as task_id, t.job as task_job, t.emp_id as task_emp_id" +
             " from emp e " +
             " left outer join dep d on e.dep_id=d.id " +
             " left outer join task t on t.emp_id=e.id")
-    @ResultMap("EmployeeResultMap")
-    public List<Employee> findAllJoin();
+    @ResultMap("JoinEmployeeResultMap")
+    public List<Employee> findAllWithJoin();
 
     @Select("SELECT * FROM emp WHERE id = #{id}")
     @ResultMap("EmployeeResultMap")

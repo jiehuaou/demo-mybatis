@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.EmployeeRepository">
-    <resultMap type="EmployeeType" id="EmployeeResultMap">
-        <constructor>
-            <idArg column="id" name="id"/>
-        </constructor>
-        <result column="first_name" property="firstName"></result>
-        <result column="last_name" property="lastName"></result>
-        <result column="career" property="career"></result>
+    <resultMap type="EmployeeType" id="JoinEmployeeResultMap" extends="EmployeeResultMap">
+<!--        <constructor>-->
+<!--            <idArg column="id" name="id"/>-->
+<!--            <arg column="first_name" name="firstName" />-->
+<!--            <arg column="last_name" name="lastName" />-->
+<!--            <arg column="career" name="career" />-->
+<!--        </constructor>-->
+<!--        <result column="first_name" property="firstName"/>-->
+<!--        <result column="last_name" property="lastName"/>-->
+<!--        <result column="career" property="career"/>-->
         <association property="department" resultMap="DepartmentResultMap"/>
         <collection property="tasks" resultMap="TaskResultMap" ofType="TaskType" />
+    </resultMap>
+    <resultMap id="EmployeeResultMap" type="EmployeeType">
+        <id column="id" property="id"/>
+        <result column="first_name" property="firstName" />
+        <result column="last_name" property="lastName" />
+        <result column="career" property="career" />
     </resultMap>
     <resultMap id="DepartmentResultMap" type="DepartmentType">
         <id property="id" column="dep_id"/>
         <result property="departName" column="dep_name"/>
-        <result property="leader" column="leader"/>
+        <result property="leader" column="dep_leader"/>
     </resultMap>
     <resultMap id="TaskResultMap" type="TaskType">
         <id property="id" column="task_id"/>
         <result property="job" column="task_job"/>
         <result property="empId" column="task_emp_id"/>
     </resultMap>
+
 </mapper>
