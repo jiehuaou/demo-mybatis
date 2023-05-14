@@ -1,10 +1,13 @@
 package com.example.demo.mapper;
 
 import com.example.demo.builder.QueryBuilder;
+import com.example.demo.model.Department;
 import com.example.demo.model.Employee;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -17,6 +20,9 @@ public interface EmployeeRepository {
     //@Results({ @Result(property = "firstName", column = "first_Name")})
     public List<Employee> findAll();
 
+    /**
+     * construct object graph with Join Query.
+     */
     @Select("select e.*, " +
             " d.dep_name, d.leader as dep_leader, " +
             " t.id as task_id, t.job as task_job, t.emp_id as task_emp_id" +
@@ -26,13 +32,37 @@ public interface EmployeeRepository {
     @ResultMap("JoinEmployeeResultMap")
     public List<Employee> findAllWithJoin();
 
-    @Select("SELECT * FROM emp WHERE id = #{id}")
-    @ResultMap("EmployeeResultMap")
-    public Employee findById(long id);
+//    @Select("SELECT id, first_name, last_name, career, dep_id FROM emp WHERE id = #{id}")
+//    @Results(id="simpleEmp", value = {
+//            @Result(property = "id", column = "id", id = true),
+//            @Result(property = "firstName", column = "first_name"),
+//            @Result(property = "lastName", column = "last_name"),
+//            @Result(property = "career", column = "career"),
+//            @Result(property = "department", column = "dep_id", one = @One(fetchType = FetchType.LAZY, select = "selectDepartment"))
+//    })
+    public Employee selectEmployeeWithNested(long id);
+
+//    @Select("SELECT id, dep_name, leader FROM dep WHERE id = #{depId}")
+//    @Results({
+//            @Result(property = "id", column = "id", id = true),
+//            @Result(property = "departName", column = "dep_name"),
+//            @Result(property = "leader", column = "leader")
+//    })
+    //public Department selectDepartment(@Param("depId") Long id);
 
     @Select("SELECT * FROM emp WHERE id = #{id}")
     @ResultMap("EmployeeResultMap")
+    public Optional<Employee> findById(long id);
+    @Select("SELECT * FROM emp WHERE id = #{id}")
+    @ResultMap("EmployeeResultMap")
     public Optional<Employee> findById2(long id);
+
+    /**
+     * Map is return without entity.
+     */
+    @Select("SELECT * FROM emp WHERE id = #{id}")
+    @ResultMap("EmployeeResultMap")
+    public Map findAsMap(long id);
 
     @Select("SELECT * FROM emp WHERE first_name = #{firstName} limit 1")
     @ResultMap("EmployeeResultMap")
@@ -47,7 +77,7 @@ public interface EmployeeRepository {
 
     @SelectProvider(type = QueryBuilder.class, method = "selectOnly3")
     @ResultMap("EmployeeResultMap")
-    public List<Employee> findSome();
+    public List<Employee> selectOnly3();
 
     /**
      * generate "where" condition only when parameter is not null
@@ -81,4 +111,6 @@ public interface EmployeeRepository {
             </script>""")
     @ResultMap("EmployeeResultMap")
     public List<Employee> findByFirstNameLike(String firstName);
+
+
 }

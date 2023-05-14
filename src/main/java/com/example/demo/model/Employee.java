@@ -48,12 +48,12 @@ public class Employee {
                 ", lastName='" + lastName + '\'' +
                 ", career='" + career + '\'' +
                 ", dep=" + showDepartmentId() +
-                ", tasks=" + tasks +
+                ", tasks=" + getTasks() +
                 '}';
     }
 
     private String showDepartmentId() {
-        return Optional.ofNullable(department)
+        return Optional.ofNullable(getDepartment())
                 .map(e->e.toShortString())
                 .orElseGet(()->"{}");
     }

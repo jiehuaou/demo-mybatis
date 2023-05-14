@@ -19,7 +19,7 @@ public class Runner110DynamicQuery implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("-------------- findSome() ------------");
-        List<Employee> employees = employeeRepository.findSome();
+        List<Employee> employees = employeeRepository.selectOnly3();
         employees.forEach(e->log.info("{}", e));
 
         log.info("-------------- findWithCondition(depId=null, writer) ------------");

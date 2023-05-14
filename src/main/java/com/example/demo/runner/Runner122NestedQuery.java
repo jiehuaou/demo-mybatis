@@ -10,21 +10,23 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * demo lazy loading on to-one and to-many link
+ */
 @Slf4j
-@Order(120)
+@Order(122)
 @Component
-public class Runner120SimpleQuery implements CommandLineRunner {
+public class Runner122NestedQuery implements CommandLineRunner {
     @Autowired
     EmployeeRepository employeeRepository;
     @Override
     public void run(String... args) throws Exception {
-        log.info("-------------- findAll() --------------");
-        List<Employee> employees = employeeRepository.findAll();
-        employees.forEach(e->log.info("{}", e));
+        log.info("-------------- selectEmployeeWithNested(1) --------------");
+        Employee employee = employeeRepository.selectEmployeeWithNested(1L);
+        log.info("simple string => {}", employee.toString());
+        log.info("-------------- load associated object -----------");
+        log.info("long   string => {}", employee.toLongString());
         log.info("--------------");
-        log.info("findById() => {}", employeeRepository.findById(1L));
-        log.info("--------------");
-        log.info("findById() => {}", employeeRepository.findById2(2L));
 
     }
 }

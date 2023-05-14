@@ -6,6 +6,8 @@
 <configuration>
     <settings>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false" /><!-- this has to be set as false if mybatis ≤3.4.1 -->
+        <setting name="lazyLoadTriggerMethods" value=""/>
     </settings>
     <typeAliases>
         <typeAlias type="com.example.demo.model.Department" alias="DepartmentType" />

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * construct object graph with Join Query.
+ */
 @Slf4j
 @Order(121)
 @Component
@@ -18,7 +21,7 @@ public class Runner121JoinQuery implements CommandLineRunner {
     EmployeeRepository employeeRepository;
     @Override
     public void run(String... args) throws Exception {
-        log.info("-------------- findAll() --------------");
+        log.info("-------------- findAllWithJoin() --------------");
         List<Employee> employees = employeeRepository.findAllWithJoin();
         employees.forEach(e->log.info("{}", e.toLongString()));
         log.info("--------------");
