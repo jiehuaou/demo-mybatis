@@ -253,3 +253,35 @@ public interface EmployeeRepository {
     public List<Employee> findAllWithJoin();
 }
 ```
+
+### lazy loading 
+mybatis-config.xml
+```xml
+<settings>
+    <setting name="aggressiveLazyLoading" value="false" />
+    <setting name="lazyLoadTriggerMethods" value=""/>
+</settings>
+```
+
+Mapper XML, specify **fetchType="lazy"** in association or collection.
+```xml
+<mapper>
+    <resultMap id="NestedEmployeeResultMap" type="EmployeeType" extends="EmployeeResultMap">
+        <association property="department" column="dep_id" select="selectDepartment" fetchType="lazy"/>
+        <collection property="tasks" column="id" select="selectTask" fetchType="lazy"/>
+    </resultMap>
+
+    <select id="selectEmployeeWithNested" resultType="EmployeeType" resultMap="NestedEmployeeResultMap">
+        SELECT id, first_name, last_name, career, dep_id FROM emp WHERE id = #{id}
+    </select>
+
+    <select id="selectDepartment" resultType="DepartmentType" resultMap="DepartmentResultMap">
+        select id as dep_id, dep_name, leader as dep_leader from dep where id = #{id}
+    </select>
+    <select id="selectTask" resultType="TaskType" resultMap="TaskResultMap">
+        select id as task_id, job as task_job, emp_id as task_emp_id from task where emp_id = #{id}
+    </select>
+
+</mapper>
+```
+
