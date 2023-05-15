@@ -259,7 +259,9 @@ mybatis-config.xml
 ```xml
 <settings>
     <setting name="aggressiveLazyLoading" value="false" />
-    <setting name="lazyLoadTriggerMethods" value=""/> <!-- default: "equals,clone,hashCode,toString" -->
+    
+    <!-- default: "equals,clone,hashCode,toString" -->
+    <setting name="lazyLoadTriggerMethods" value=""/> 
 </settings>
 ```
 
