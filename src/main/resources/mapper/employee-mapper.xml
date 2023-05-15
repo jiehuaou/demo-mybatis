@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.EmployeeRepository">
-    <resultMap type="EmployeeType" id="JoinEmployeeResultMap" extends="EmployeeResultMap">
-        <association property="department" resultMap="DepartmentResultMap"/>
-        <collection property="tasks" resultMap="TaskResultMap" ofType="TaskType" />
+    <resultMap type="EmployeeType" id="JoinEmployeeMap" extends="EmployeeMap">
+        <association property="department" resultMap="DepartmentMap"/>
+        <collection property="tasks" resultMap="TaskMap" ofType="TaskType" />
     </resultMap>
-    <resultMap id="EmployeeResultMap" type="EmployeeType">
+    <resultMap id="EmployeeMap" type="EmployeeType">
         <id column="id" property="id"/>
         <result column="first_name" property="firstName" />
         <result column="last_name" property="lastName" />
         <result column="career" property="career" />
     </resultMap>
-    <resultMap id="DepartmentResultMap" type="DepartmentType">
+    <resultMap id="DepartmentMap" type="DepartmentType">
         <id property="id" column="dep_id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="dep_leader"/>
     </resultMap>
-    <resultMap id="TaskResultMap" type="TaskType">
+    <resultMap id="TaskMap" type="TaskType">
         <id property="id" column="task_id"/>
         <result property="job" column="task_job"/>
         <result property="empId" column="task_emp_id"/>
     </resultMap>
 
-    <resultMap id="NestedEmployeeResultMap" type="EmployeeType" extends="EmployeeResultMap">
+    <resultMap id="NestedEmployeeMap" type="EmployeeType" extends="EmployeeMap">
         <association property="department" column="dep_id" select="selectDepartment" fetchType="lazy"/>
         <collection property="tasks" column="id" select="selectTask" fetchType="lazy"/>
     </resultMap>
 
-    <select id="selectEmployeeWithNested" resultType="EmployeeType" resultMap="NestedEmployeeResultMap">
+    <select id="selectEmployeeWithNested" resultType="EmployeeType" resultMap="NestedEmployeeMap">
         SELECT id, first_name, last_name, career, dep_id FROM emp WHERE id = #{id}
     </select>
 
-    <select id="selectDepartment" resultType="DepartmentType" resultMap="DepartmentResultMap">
+    <select id="selectDepartment" resultType="DepartmentType" resultMap="DepartmentMap">
         select id as dep_id, dep_name, leader as dep_leader from dep where id = #{id}
     </select>
-    <select id="selectTask" resultType="TaskType" resultMap="TaskResultMap">
+    <select id="selectTask" resultType="TaskType" resultMap="TaskMap">
         select id as task_id, job as task_job, emp_id as task_emp_id from task where emp_id = #{id}
     </select>
 

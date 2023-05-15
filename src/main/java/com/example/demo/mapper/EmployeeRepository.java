@@ -16,7 +16,7 @@ import java.util.Optional;
 @Mapper
 public interface EmployeeRepository {
     @Select("select * from emp")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     //@Results({ @Result(property = "firstName", column = "first_Name")})
     public List<Employee> findAll();
 
@@ -29,7 +29,7 @@ public interface EmployeeRepository {
             " from emp e " +
             " left outer join dep d on e.dep_id=d.id " +
             " left outer join task t on t.emp_id=e.id")
-    @ResultMap("JoinEmployeeResultMap")
+    @ResultMap("JoinEmployeeMap")
     public List<Employee> findAllWithJoin();
 
 //    @Select("SELECT id, first_name, last_name, career, dep_id FROM emp WHERE id = #{id}")
@@ -51,21 +51,21 @@ public interface EmployeeRepository {
     //public Department selectDepartment(@Param("depId") Long id);
 
     @Select("SELECT * FROM emp WHERE id = #{id}")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public Optional<Employee> findById(long id);
     @Select("SELECT * FROM emp WHERE id = #{id}")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public Optional<Employee> findById2(long id);
 
     /**
      * Map is return without entity.
      */
     @Select("SELECT * FROM emp WHERE id = #{id}")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public Map findAsMap(long id);
 
     @Select("SELECT * FROM emp WHERE first_name = #{firstName} limit 1")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public Optional<Employee> findByFirstName(String firstName);
 
     @Update("update emp set dep_id=#{depId} WHERE id = #{empId}")
@@ -76,7 +76,7 @@ public interface EmployeeRepository {
     public int create(Employee employee);
 
     @SelectProvider(type = QueryBuilder.class, method = "selectOnly3")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public List<Employee> selectOnly3();
 
     /**
@@ -90,14 +90,14 @@ public interface EmployeeRepository {
                 </where>
             </script>
             """)
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public List<Employee> findWithCondition(Long depId, String career);
 
     /**
      * generate "where" condition only when parameter is not null
      */
     @SelectProvider(type = QueryBuilder.class)  // if method missing, then choose Same Method Name
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public List<Employee> selectWithCondition(@Param("depId") Long depId, @Param("career") String career);
 
     /**
@@ -109,7 +109,7 @@ public interface EmployeeRepository {
                 SELECT * FROM emp 
                     WHERE first_name like #{firstName}
             </script>""")
-    @ResultMap("EmployeeResultMap")
+    @ResultMap("EmployeeMap")
     public List<Employee> findByFirstNameLike(String firstName);
 
 

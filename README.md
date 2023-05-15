@@ -38,13 +38,13 @@ logging.level.com.example.demo.mapper=TRACE
 ```xml
 <mapper namespace="com.example.demo.mapper.DepartmentRepository">
     <!-- result mapping  -->
-    <resultMap type="DepartmentType" id="DepartmentResultMap">
+    <resultMap type="DepartmentType" id="DepartmentMap">
         <id property="id" column="id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="leader"/>
     </resultMap>
 
-    <select id="findById" resultType="DepartmentType" resultMap="DepartmentResultMap">
+    <select id="findById" resultType="DepartmentType" resultMap="DepartmentMap">
         select * from dep where id = #{id}
     </select>
 </mapper>
@@ -73,7 +73,7 @@ public interface EmployeeRepository {
 ### Dynamic SQL with XML
 ```xml
 <!-- dynamic condition : find by Name Like '%xxx%' and leader EQ 'xxx' -->
-    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentResultMap">
+    <select id="findByNameLikeAndLeader" resultType="DepartmentType" resultMap="DepartmentMap">
         <bind name="depName" value="'%' + depName.toLowerCase().trim() + '%'"/>
         select * from dep
         <where>
@@ -204,24 +204,24 @@ select e.id, e.first_name, e.last_name, e.career, e.dep_id,
 Result Map
 ```xml
 <mapper namespace="com.example.demo.mapper.EmployeeRepository">
-    <resultMap type="EmployeeType" id="JoinEmployeeResultMap" extends="EmployeeResultMap">
+    <resultMap type="EmployeeType" id="JoinEmployeeMap" extends="EmployeeMap">
         <!--   ref department Object     -->
-        <association property="department" resultMap="DepartmentResultMap"/>
+        <association property="department" resultMap="DepartmentMap"/>
         <!--   ref collection of Task Object     -->
-        <collection property="tasks" resultMap="TaskResultMap" ofType="TaskType" />
+        <collection property="tasks" resultMap="TaskMap" ofType="TaskType" />
     </resultMap>
-    <resultMap id="EmployeeResultMap" type="EmployeeType">
+    <resultMap id="EmployeeMap" type="EmployeeType">
         <id     column="id" property="id"/>
         <result column="first_name" property="firstName" />
         <result column="last_name" property="lastName" />
         <result column="career" property="career" />
     </resultMap>
-    <resultMap id="DepartmentResultMap" type="DepartmentType">
+    <resultMap id="DepartmentMap" type="DepartmentType">
         <id     property="id" column="dep_id"/>
         <result property="departName" column="dep_name"/>
         <result property="leader" column="dep_leader"/>
     </resultMap>
-    <resultMap id="TaskResultMap" type="TaskType">
+    <resultMap id="TaskMap" type="TaskType">
         <id property="id" column="task_id"/>
         <result property="job" column="task_job"/>
         <result property="empId" column="task_emp_id"/>
@@ -249,7 +249,7 @@ public interface EmployeeRepository {
             " from emp e " +
             " left outer join dep d on e.dep_id=d.id " +
             " left outer join task t on t.emp_id=e.id")
-    @ResultMap("JoinEmployeeResultMap")
+    @ResultMap("JoinEmployeeMap")
     public List<Employee> findAllWithJoin();
 }
 ```
@@ -259,26 +259,26 @@ mybatis-config.xml
 ```xml
 <settings>
     <setting name="aggressiveLazyLoading" value="false" />
-    <setting name="lazyLoadTriggerMethods" value=""/>
+    <setting name="lazyLoadTriggerMethods" value=""/> <!-- default: "equals,clone,hashCode,toString" -->
 </settings>
 ```
 
 Mapper XML, specify **fetchType="lazy"** in association or collection.
 ```xml
 <mapper>
-    <resultMap id="NestedEmployeeResultMap" type="EmployeeType" extends="EmployeeResultMap">
+    <resultMap id="NestedEmployeeMap" type="EmployeeType" extends="EmployeeMap">
         <association property="department" column="dep_id" select="selectDepartment" fetchType="lazy"/>
         <collection property="tasks" column="id" select="selectTask" fetchType="lazy"/>
     </resultMap>
 
-    <select id="selectEmployeeWithNested" resultType="EmployeeType" resultMap="NestedEmployeeResultMap">
+    <select id="selectEmployeeWithNested" resultType="EmployeeType" resultMap="NestedEmployeeMap">
         SELECT id, first_name, last_name, career, dep_id FROM emp WHERE id = #{id}
     </select>
 
-    <select id="selectDepartment" resultType="DepartmentType" resultMap="DepartmentResultMap">
+    <select id="selectDepartment" resultType="DepartmentType" resultMap="DepartmentMap">
         select id as dep_id, dep_name, leader as dep_leader from dep where id = #{id}
     </select>
-    <select id="selectTask" resultType="TaskType" resultMap="TaskResultMap">
+    <select id="selectTask" resultType="TaskType" resultMap="TaskMap">
         select id as task_id, job as task_job, emp_id as task_emp_id from task where emp_id = #{id}
     </select>
 
