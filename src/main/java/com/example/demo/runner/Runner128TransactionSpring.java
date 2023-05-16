@@ -33,6 +33,12 @@ public class Runner128TransactionSpring implements CommandLineRunner {
         log.info("-------------- testSuccessTransaction() --------------");
         departmentService.testSuccessTransaction(301L, 302L);
 
+        try {
+            departmentService.testPartialTransaction(303L, 304L);
+        } catch (Exception e) {
+            log.info("abort ==> {}", e.toString());
+        }
+
         log.info("-------------- testFailTransaction() --------------");
         try {
             departmentService.testFailTransaction(401L, 402L);
