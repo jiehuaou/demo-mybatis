@@ -287,3 +287,49 @@ Mapper XML, specify **fetchType="lazy"** in association or collection.
 </mapper>
 ```
 
+### One Popular SQL Question : greatest-n-per-group problem
+
+Retrieving the last record in each group 
+
+Such as : get the latest purchase on each customer-id  
+
+```iso92-sql
+CREATE TABLE purchase (
+  id INT PRIMARY KEY,
+  customer_id INT,
+  item_id INT NULL,
+  date date
+);
+
+INSERT INTO purchase (id, customer_id, date) VALUES (1,1,'2021-01-01');
+INSERT INTO purchase (id, customer_id, date) VALUES (2,1,'2021-01-02');
+INSERT INTO purchase (id, customer_id, date) VALUES (3,1,'2021-01-03');
+INSERT INTO purchase (id, customer_id, date) VALUES (4,2,'2021-01-02');
+```
+
+Solution-1, use LEFT JOIN, if p1.row is latest, then p2.id should be null.
+```sql
+SELECT  p1.* FROM purchase p1 
+    LEFT JOIN purchase p2 
+    ON p1.customer_id = p2.customer_id AND 
+        (p1.date < p2.date )
+    where p2.id is null 
+```
+
+Solution-2, use sub-query, find the max(date) by customer_id first, then ...
+```sql
+SELECT  p1.* FROM purchase p1 
+    join (select customer_id, max(date) as max_date 
+            from purchase 
+            group by customer_id) p2
+    on p1.customer_id=p2.customer_id and p1.date=p2.max_date
+```
+
+Solution-3, use window function, row_number() over (partition by order by DESC)
+```sql
+SELECT  p1.* 
+    FROM (select *, 
+          ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY date DESC) AS rn 
+          from purchase) P1
+    WHERE p1.rn=1 
+```
